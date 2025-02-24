@@ -1,5 +1,11 @@
 package cz.vse.adventura.logika;
 
+import cz.vse.adventura.main.Pozorovatel;
+import cz.vse.adventura.main.PredmetPozorovani;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Třída HerniPlan
  * Představuje mapu (byt) a rozložení objektů (místností a věcí) v něm.
@@ -9,7 +15,7 @@ package cz.vse.adventura.logika;
  * Autoři: Michael Kolling, Lubos Pavlicek, Jarmila Pavlickova, Michael Cerny
  * Verze: pro školní rok 2016/2017, LS2024, 4IT110
  */
-public class HerniPlan {
+public class HerniPlan implements PredmetPozorovani {
     private Prostor aktualniProstor;  // Změněno na private pro zapouzdření
 
     /**
@@ -18,8 +24,8 @@ public class HerniPlan {
     public HerniPlan() {
         vytvorMistnostiHry(); // Inicializace herního plánu
     }
-    
 
+    private Set<Pozorovatel> seznamPozorovatelu = new HashSet<>();
 private void vytvorMistnostiHry() {
     Prostor chodba = new Prostor("Chodba");
     Prostor obyvaciPokoj = new Prostor("Obývák");
@@ -82,10 +88,21 @@ private void vytvorMistnostiHry() {
      */
     public void setAktualniProstor(Prostor novyProstor)  { //Setter pro aktuální prostor, pro pohyb pomoci prikazu Jdi
         this.aktualniProstor = novyProstor;
+        for(Pozorovatel pozorovatel: seznamPozorovatelu) {
+            pozorovatel.aktualizuj();
+        }
     }
 
     public Prostor getAktualniProstor() {
         return aktualniProstor;
     }
-    
+
+    /**
+     * @param pozorovatel
+     */
+    @Override
+    public void registruj(Pozorovatel pozorovatel) {
+        seznamPozorovatelu.add(pozorovatel);
+
+    }
 }
