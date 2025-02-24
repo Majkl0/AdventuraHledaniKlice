@@ -102,6 +102,17 @@ public class Hra implements IHra {
     return textKVypsani;
 }
 
+    /**
+     * @return Aktuální prostor, ve kterém se hráč nachází.
+     */
+
+    public Prostor vratAktualniProstor() {
+        return herniPlan.getAktualniProstor();
+    }
+
+    public HerniPlan getHerniPlan() {
+        return herniPlan; // nesmí být null
+    }
 
     /**
      * Nastaví stav hry na konečný.
@@ -110,5 +121,10 @@ public class Hra implements IHra {
 public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve třídě
     this.konecHry = konecHry;
 }
+
+
+    public Prostor getAktualniProstor() {
+        return herniPlan.getAktualniProstor(); // Získání aktuálního prostoru z herního plánu
+    }
 
 }

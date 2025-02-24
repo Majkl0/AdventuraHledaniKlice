@@ -1,22 +1,32 @@
 package cz.vse.adventura.main;
 
+import cz.vse.adventura.logika.HerniPlan;
 import cz.vse.adventura.logika.Hra;
 import cz.vse.adventura.logika.IHra;
+import cz.vse.adventura.logika.Prostor;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.util.List;
 import java.util.Optional;
 
 public class HomeController {
-        private Button tlacitkoOdesli;
-        @FXML
+    @FXML
+    private ListView panelVychodu;
+    @FXML
+    private Button tlacitkoOdesli;
+    @FXML
     private TextArea vystup;
     @FXML
     private TextField vstup;
-
+    @FXML
     private IHra hra = new Hra();
+    @FXML
+    private ObservableList<Prostor> seznamVychodu = FXCollections.observableArrayList();
     @FXML
     private void initialize() {
         vystup.appendText(hra.vratUvitani()+"\n\n");
@@ -24,12 +34,19 @@ public class HomeController {
             @Override
             public void run() {
                 vstup.requestFocus();
+                panelVychodu.setItems(seznamVychodu);
 
             }
         });
     }
 
-@FXML
+    @FXML
+    private void aktualizujSeznamVychodu() {
+        seznamVychodu.clear();
+        seznamVychodu.addAll(hra.getHerniPlan().getAktualniProstor().getSeznamVychodu());
+    }
+
+    @FXML
     private void odesliVstup(ActionEvent actionEvent) {
         String prikaz = vstup.getText();
         vystup.appendText("> "+prikaz+"\n");

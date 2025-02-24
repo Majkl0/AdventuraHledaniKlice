@@ -40,4 +40,5 @@ public interface IHra
      */
     public String zpracujPrikaz(String radek);
 
+    public HerniPlan getHerniPlan();
 }

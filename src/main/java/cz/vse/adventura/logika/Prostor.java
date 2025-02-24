@@ -1,7 +1,6 @@
 package cz.vse.adventura.logika;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Třída Prostor
@@ -133,6 +132,15 @@ public class Prostor {
             return "Východy: " + String.join(", ", vychody.keySet());
         }
 
+    /**
+     * Vrací seznam názvů východů z aktuálního prostoru.
+     *
+     * @return Seznam názvů východů
+     */
+    public Collection<Prostor> getSeznamVychodu() {
+        return vychody.values();
+    }
+
 
     /**
      * Vypisuje  popis aktuálního prostoru. Tato metoda vytváří řetězec, který zahrnuje
@@ -185,4 +193,8 @@ public class Prostor {
     }
     }
 
+    @Override
+    public String toString() {
+        return getNazev();
+    }
 }

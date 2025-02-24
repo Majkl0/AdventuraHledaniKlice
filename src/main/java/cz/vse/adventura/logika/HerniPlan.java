@@ -10,20 +10,16 @@ package cz.vse.adventura.logika;
  * Verze: pro školní rok 2016/2017, LS2024, 4IT110
  */
 public class HerniPlan {
-    public Prostor aktualniProstor;
+    private Prostor aktualniProstor;  // Změněno na private pro zapouzdření
 
     /**
      * Konstruktor třídy HerniPlan. Vytváří místnosti ve hře.
      */
     public HerniPlan() {
-        vytvorMistnostiHry();
+        vytvorMistnostiHry(); // Inicializace herního plánu
     }
+    
 
-    /**
- * Vytváří místnosti ve hře a umisťuje do nich předměty.
- * Metoda vytváří jednotlivé místnosti, nastavuje jejich propojení přes chodbu
- * a rozmisťuje do nich předměty.
- */
 private void vytvorMistnostiHry() {
     Prostor chodba = new Prostor("Chodba");
     Prostor obyvaciPokoj = new Prostor("Obývák");
@@ -78,9 +74,6 @@ private void vytvorMistnostiHry() {
      * Vrátí aktuální prostor, ve kterém se hráč nachází.
      * @return Aktuální prostor.
      */
-    public Prostor getAktualniProstor() {
-        return aktualniProstor;
-    }
 
     /**
      * Nastaví nový aktuální prostor.
@@ -91,4 +84,8 @@ private void vytvorMistnostiHry() {
         this.aktualniProstor = novyProstor;
     }
 
+    public Prostor getAktualniProstor() {
+        return aktualniProstor;
+    }
+    
 }
