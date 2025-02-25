@@ -2,8 +2,11 @@ package cz.vse.adventura.logika;
 
 import cz.vse.adventura.main.Pozorovatel;
 import cz.vse.adventura.main.PredmetPozorovani;
+import cz.vse.adventura.main.ZmenaHry;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,9 +26,12 @@ public class HerniPlan implements PredmetPozorovani {
      */
     public HerniPlan() {
         vytvorMistnostiHry(); // Inicializace herního plánu
+        for(ZmenaHry zmenaHry: ZmenaHry.values()) {
+            seznamPozorovatelu.put(zmenaHry, new HashSet<>());
+        }
     }
 
-    private Set<Pozorovatel> seznamPozorovatelu = new HashSet<>();
+    private Map<ZmenaHry, Set <Pozorovatel>> seznamPozorovatelu = new HashMap<>();
 private void vytvorMistnostiHry() {
     Prostor chodba = new Prostor("Chodba");
     Prostor obyvaciPokoj = new Prostor("Obývák");
@@ -86,11 +92,9 @@ private void vytvorMistnostiHry() {
      * @param novyProstor Prostor, který se stane novým aktuálním prostorem - když hráč jde
      * do jiné místnosti.
      */
-    public void setAktualniProstor(Prostor novyProstor)  { //Setter pro aktuální prostor, pro pohyb pomoci prikazu Jdi
+    public void setAktualniProstor(Prostor novyProstor) {
         this.aktualniProstor = novyProstor;
-        for(Pozorovatel pozorovatel: seznamPozorovatelu) {
-            pozorovatel.aktualizuj();
-        }
+        upozorniPozorovatele(ZmenaHry.ZMENA_MISTNOSTI);
     }
 
     public Prostor getAktualniProstor() {
@@ -101,8 +105,15 @@ private void vytvorMistnostiHry() {
      * @param pozorovatel
      */
     @Override
-    public void registruj(Pozorovatel pozorovatel) {
-        seznamPozorovatelu.add(pozorovatel);
+    public void registruj(ZmenaHry zmenaHry, Pozorovatel pozorovatel) {
+        seznamPozorovatelu.get(zmenaHry).add(pozorovatel);
 
     }
+
+    private void upozorniPozorovatele(ZmenaHry zmenaHry) {
+        for(Pozorovatel pozorovatel: seznamPozorovatelu.get(zmenaHry)) {
+            pozorovatel.aktualizuj();
+        }
+    }
+
 }

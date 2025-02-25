@@ -2,6 +2,14 @@ package cz.vse.adventura.logika;
 
 import cz.vse.adventura.Prikazy.*;
 import cz.vse.adventura.Prikazy.SeznamPrikazu;
+import cz.vse.adventura.main.Pozorovatel;
+import cz.vse.adventura.main.PredmetPozorovani;
+import cz.vse.adventura.main.ZmenaHry;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Třída Hra
@@ -17,6 +25,8 @@ public class Hra implements IHra {
     private boolean konecHry = false;
     private Casovac casovac;
     private Kapsa kapsa;
+
+    private Map<ZmenaHry, Set<Pozorovatel>> seznamPozorovatelu = new HashMap<>();
 
 
     /**
@@ -39,6 +49,9 @@ public class Hra implements IHra {
         platnePrikazy.vlozPrikaz(new PrikazVyhod(kapsa, herniPlan));
         platnePrikazy.vlozPrikaz(new PrikazPouzij(herniPlan, kapsa, casovac, this));
         platnePrikazy.vlozPrikaz(new PrikazProzkoumej(herniPlan, casovac));
+        for(ZmenaHry zmenaHry: ZmenaHry.values()) {
+            seznamPozorovatelu.put(zmenaHry, new HashSet<>());
+        }
     }
 
     /**
@@ -94,6 +107,7 @@ public class Hra implements IHra {
     String textKVypsani=" .... ";
     if (platnePrikazy.jePlatnyPrikaz(slovoPrikazu)) {
         IPrikaz prikaz = platnePrikazy.vratPrikaz(slovoPrikazu);
+        setKonecHry(true);
         textKVypsani = prikaz.provedPrikaz(parametry);
     }
     else {
@@ -120,6 +134,7 @@ public class Hra implements IHra {
      */
 public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve třídě
     this.konecHry = konecHry;
+    upozorniPozorovatele(ZmenaHry.KONEC_HRY);
 }
 
 
@@ -127,4 +142,19 @@ public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve tř�
         return herniPlan.getAktualniProstor(); // Získání aktuálního prostoru z herního plánu
     }
 
-}
+    /**
+     * @param zmenaHry
+     * @param pozorovatel
+     */
+    @Override
+    public void registruj(ZmenaHry zmenaHry, Pozorovatel pozorovatel) {
+        seznamPozorovatelu.get(zmenaHry).add(pozorovatel);
+
+        }
+        private void upozorniPozorovatele(ZmenaHry zmenaHry) {
+            for(Pozorovatel pozorovatel: seznamPozorovatelu.get(zmenaHry)) {
+                pozorovatel.aktualizuj();
+            }
+        }
+
+    }

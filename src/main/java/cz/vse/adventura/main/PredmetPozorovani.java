@@ -1,5 +1,5 @@
 package cz.vse.adventura.main;
 
 public interface PredmetPozorovani {
-    void registruj(Pozorovatel pozorovatel);
+    void registruj(ZmenaHry zmenaHry, Pozorovatel pozorovatel);
 }

@@ -1,13 +1,15 @@
 
 package cz.vse.adventura.logika;
 
+import cz.vse.adventura.main.PredmetPozorovani;
+
 /**
  *  Rozhraní které musí implementovat hra, je na ně navázáno uživatelské rozhraní
  *
  *@author     Michael Kolling, Lubos Pavlicek, Jarmila Pavlickova
  *@version    pro školní rok 2016/2017, LS2024, 4IT110
  */
-public interface IHra
+public interface IHra extends PredmetPozorovani
 {
     /**
      *  Vrátí úvodní zprávu pro hráče.
