@@ -50,7 +50,7 @@
       </HBox>
       <SplitPane dividerPositions="0.3" GridPane.rowIndex="1">
          <items>
-             <ListView fx:id="panelVychodu" prefHeight="330.0" prefWidth="214.0" />
+             <ListView onMouseClicked="#klikPanelVychodu" fx:id="panelVychodu" prefHeight="330.0" prefWidth="214.0" />
              <TextArea fx:id="vystup" editable="false" prefHeight="330.0" prefWidth="191.0" />
          </items>
       </SplitPane>

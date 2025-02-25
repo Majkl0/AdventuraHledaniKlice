@@ -15,7 +15,7 @@ import cz.vse.adventura.logika.Prostor;
  * Verze: pro školní rok 2016/2017, LS2024, 4IT110
  */
 public class PrikazJdi implements IPrikaz {
-    private static final String NAZEV = "Jdi";
+    public static final String NAZEV = "Jdi";
     private HerniPlan herniPlan;
     private Casovac casovac;
 

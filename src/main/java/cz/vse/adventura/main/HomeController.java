@@ -1,5 +1,6 @@
 package cz.vse.adventura.main;
 
+import cz.vse.adventura.Prikazy.PrikazJdi;
 import cz.vse.adventura.logika.HerniPlan;
 import cz.vse.adventura.logika.Hra;
 import cz.vse.adventura.logika.IHra;
@@ -10,13 +11,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 import java.util.Optional;
 
 public class HomeController implements Pozorovatel{
     @FXML
-    private ListView panelVychodu;
+    private ListView<Prostor> panelVychodu;
     @FXML
     private Button tlacitkoOdesli;
     @FXML
@@ -51,19 +53,25 @@ public class HomeController implements Pozorovatel{
     @FXML
     private void odesliVstup(ActionEvent actionEvent) {
         String prikaz = vstup.getText();
-        vystup.appendText("> "+prikaz+"\n");
+        vstup.clear();
+        zpracujPrikaz(prikaz);
+    }
+
+    private void zpracujPrikaz(String prikaz) {
+        vystup.appendText("> "+ prikaz +"\n");
         String vysledek = hra.zpracujPrikaz(prikaz);
         vystup.appendText(vysledek+"\n\n");
-        vstup.clear();
 
         if (hra.konecHry()) {
             vystup.appendText(hra.vratEpilog());
             vstup.setDisable(true);
             tlacitkoOdesli.setDisable(true);
+            panelVychodu.setDisable(true);
 
         }
-}
-        public void ukoncitHru(ActionEvent actionEvent) {
+    }
+
+    public void ukoncitHru(ActionEvent actionEvent) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Skutečně si přejete ukončit hru?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK)
@@ -76,5 +84,13 @@ public class HomeController implements Pozorovatel{
     @Override
     public void aktualizuj() {
     aktualizujSeznamVychodu();
+    }
+
+    @FXML
+    private void klikPanelVychodu(MouseEvent mouseEvent) {
+        Prostor cil = panelVychodu.getSelectionModel().getSelectedItem();
+        if (cil == null) return;
+        String prikaz = PrikazJdi.NAZEV + " " + cil;
+        zpracujPrikaz(prikaz);
     }
 }
