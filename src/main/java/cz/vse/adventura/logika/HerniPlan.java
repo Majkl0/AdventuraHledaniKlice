@@ -28,11 +28,12 @@ public class HerniPlan implements PredmetPozorovani {
         vytvorMistnostiHry(); // Inicializace herního plánu
         for(ZmenaHry zmenaHry: ZmenaHry.values()) {
             seznamPozorovatelu.put(zmenaHry, new HashSet<>());
+            upozorniPozorovatele(ZmenaHry.ZMENA_MISTNOSTI);
         }
     }
 
     private Map<ZmenaHry, Set <Pozorovatel>> seznamPozorovatelu = new HashMap<>();
-private void vytvorMistnostiHry() {
+    private void vytvorMistnostiHry() {
     Prostor chodba = new Prostor("Chodba");
     Prostor obyvaciPokoj = new Prostor("Obývák");
     Prostor loznice = new Prostor("Ložnice");
