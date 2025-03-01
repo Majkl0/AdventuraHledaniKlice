@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
@@ -121,24 +122,44 @@ hra.registruj(ZmenaHry.ZMENA_INVENTARE, () -> {
         super.updateItem(vec, empty);
         if (empty || vec == null) {
             setText(null);
+            setGraphic(null);
         } else {
             setText(vec.getNazev());
+            // Přidání obrázku
+            ImageView obrazek = new ImageView(new Image(
+                getClass().getResource("/cz.vse.adventura/main/prostory/veci/" + vec.getNazev() + ".jpg").toExternalForm()
+            ));
+            obrazek.setFitHeight(20);
+            obrazek.setFitWidth(20);
+            setGraphic(obrazek);
         }
     }
 });
 
-    // V metodě initialize() v HomeController.java
-veciVKapse.setCellFactory(param -> new ListCell<Vec>() {
-    @Override
-    protected void updateItem(Vec vec, boolean empty) {
-        super.updateItem(vec, empty);
-        if (empty || vec == null) {
-            setText(null);
-        } else {
-            setText(vec.getNazev());
+    veciVKapse.setCellFactory(param -> new ListCell<Vec>() {
+        @Override
+        protected void updateItem(Vec vec, boolean empty) {
+            super.updateItem(vec, empty);
+            if (empty || vec == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                setText(vec.getNazev());
+                try {
+                    ImageView obrazek = new ImageView(new Image(
+                            getClass().getResource("/cz.vse.adventura/main/prostory/veci/" +
+                                    vec.getNazev().toLowerCase().replace(" ", "_") + ".jpg").toExternalForm()
+                    ));
+                    obrazek.setFitHeight(40);
+                    obrazek.setFitWidth(40);
+                    setGraphic(obrazek);
+                } catch (Exception e) {
+                    setGraphic(null);
+                }
+            }
         }
-    }
-});
+    });
+
     // Nastavení viditelnosti inventáře
     inicializujKapsa.setVisible(true);
     veciVKapse.setItems(Vec.getSeznamVeci());
@@ -224,8 +245,19 @@ veciVKapse.setCellFactory(param -> new ListCell<Vec>() {
                 super.updateItem(vec, empty);
                 if (empty || vec == null) {
                     setText(null);
+                    setGraphic(null);
                 } else {
                     setText(vec.getNazev());
+                    try {
+                        String imagePath = vec.getObrazek();
+                        ImageView obrazek = new ImageView(new Image(
+                                getClass().getResource(vec.getObrazek()).toExternalForm()));
+                        obrazek.setFitWidth(40);
+                        obrazek.setFitHeight(40);
+                        setGraphic(obrazek);
+                    } catch (Exception e) {
+                        setGraphic(null);
+                    }
                 }
             }
         });
@@ -290,16 +322,14 @@ veciVKapse.setCellFactory(param -> new ListCell<Vec>() {
         }
     }
 
-private void aktualizujKapsa() {
-    if (hra.getHerniPlan().getKapsa() != null) {
-        Platform.runLater(() -> {
-            veciVKapse.setItems(hra.getHerniPlan().getKapsa().getVeci());
-        });
+    private void aktualizujKapsa() {
+        if (hra.getHerniPlan().getKapsa() != null) {
+            Platform.runLater(() -> {
+                veciVKapse.setItems(null);
+                veciVKapse.setItems(hra.getHerniPlan().getKapsa().getVeci());
+            });
+        }
     }
-}
-
-
-
 }
 
 

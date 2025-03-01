@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 public class Vec {
     private String nazev;
     private boolean jePrenositelna;
+    private String obrazek; // přidáno pro cestu k obrázku
     static Hra hra;
 
     /**
@@ -17,28 +18,37 @@ public class Vec {
     public Vec(String nazevVeci, boolean jePrenositelna) {
         this.nazev = nazevVeci;
         this.jePrenositelna = jePrenositelna;
+        this.obrazek = "/cz.vse.adventura/main/prostory/veci/" + nazevVeci.toLowerCase().replace(" ", "_") + ".jpg";
     }
 
     /**
-     * Nastaví referenci na hlavní třídu hry
+     * Konstruktor pro vytvoření instance třídy Vec s vlastní cestou k obrázku
+     * @param nazevVeci Název předmětu
+     * @param jePrenositelna Určuje, zda lze předmět přenášet
+     * @param obrazek Cesta k obrázku předmětu
      */
+    public Vec(String nazevVeci, boolean jePrenositelna, String obrazek) {
+        this.nazev = nazevVeci;
+        this.jePrenositelna = jePrenositelna;
+        this.obrazek = obrazek;
+    }
+
     public static void setHra(Hra hra) {
         Vec.hra = hra;
     }
 
-    /**
-     * @return Název předmětu
-     */
     public String getNazev() {
         return nazev;
     }
 
-    /**
-     * @return true pokud je předmět přenositelný, jinak false
-     */
     public boolean jePrenositelna() {
         return jePrenositelna;
     }
+
+    public String getObrazek() {
+        return obrazek;
+    }
+
     private static ObservableList<Vec> seznamVeci = FXCollections.observableArrayList();
 
     public static ObservableList<Vec> getSeznamVeci() {
