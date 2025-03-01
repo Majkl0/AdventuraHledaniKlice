@@ -87,22 +87,25 @@
                               <Image url="@hrac.png" />
                            </image>
                         </ImageView>
-                        <Button layoutX="389.0" layoutY="313.0" mnemonicParsing="false" text="Prozkoumat místnost" />
+                         <Button layoutX="389.0" layoutY="313.0" mnemonicParsing="false"
+                                 text="Prozkoumat místnost"
+                                 onAction="#prozkoumatMistnost" />
                      </children>
                   </Pane>
                </children>
             </HBox>
          </content>
       </TitledPane>
-      <TitledPane animated="false" prefHeight="400.0" prefWidth="239.0" text="Inventář" GridPane.rowIndex="1">
-         <content>
-            <ListView fx:id="veciVKapse" prefHeight="200.0" prefWidth="200.0" />
-         </content>
-      </TitledPane>
-      <TitledPane fx:id="veciVMistnosti" prefHeight="334.0" prefWidth="239.0" text="Věci v místnosti" GridPane.rowIndex="2">
-         <content>
-            <ListView prefHeight="200.0" prefWidth="200.0" />
-         </content>
-      </TitledPane>
+       <TitledPane fx:id="inicializujKapsa" prefHeight="400.0" prefWidth="239.0" text="Inventář" GridPane.rowIndex="1">
+           <content>
+               <ListView fx:id="veciVKapse" />
+           </content>
+       </TitledPane>
+       <!-- V home.fxml změňte: -->
+       <TitledPane prefHeight="334.0" prefWidth="239.0" text="Věci v místnosti" GridPane.rowIndex="2" fx:id="veciVMistnostiPane">
+           <content>
+               <ListView fx:id="veciVMistnosti" onMouseClicked="#vemVec" />
+           </content>
+       </TitledPane>
    </children>
 </GridPane>

@@ -1,25 +1,18 @@
 package cz.vse.adventura.logika;
 
-import java.util.HashSet;
-import java.util.Set;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-/**
- * Třída Vec
- * Reprezentuje předměty, které můžeme přenášet nebo mohou obsahovat další předměty.
- * Každá věc má svůj název a vlastnost zda je přenositelná.
- * 2 předměty jsou určeny k odemykání dalších dvou předmětů
- * Díky této třídě můžeme manipulovat s předměty a hru vyhrát.
- *
- * @author Michael Cerny
- * @version LS2024, 4IT110
- */
 public class Vec {
     private String nazev;
     private boolean jePrenositelna;
+    static Hra hra;
 
     /**
      * Konstruktor pro vytvoření instance třídy Vec.
-     * Inicializuje věc s daným názvem a určuje, zda je věc přenositelná.
+     * @param nazevVeci Název předmětu
+     * @param jePrenositelna Určuje, zda lze předmět přenášet
      */
     public Vec(String nazevVeci, boolean jePrenositelna) {
         this.nazev = nazevVeci;
@@ -27,19 +20,28 @@ public class Vec {
     }
 
     /**
-     * Vrací název předmětu.
-     * @return Název předmětu jako řetězec.
+     * Nastaví referenci na hlavní třídu hry
+     */
+    public static void setHra(Hra hra) {
+        Vec.hra = hra;
+    }
+
+    /**
+     * @return Název předmětu
      */
     public String getNazev() {
         return nazev;
     }
 
     /**
-     * Vrací informaci, zda je předmět přenositelný.
-     * @return true pokud lze předmět přenášet, jinak false.
+     * @return true pokud je předmět přenositelný, jinak false
      */
     public boolean jePrenositelna() {
         return jePrenositelna;
     }
- }
+    private static ObservableList<Vec> seznamVeci = FXCollections.observableArrayList();
 
+    public static ObservableList<Vec> getSeznamVeci() {
+        return seznamVeci;
+    }
+}

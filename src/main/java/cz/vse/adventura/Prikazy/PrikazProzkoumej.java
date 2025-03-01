@@ -26,6 +26,7 @@ public class PrikazProzkoumej implements IPrikaz {
     /**
      * Provede příkaz "Prozkoumej", který umožňuje hráči získat informace o věcech v aktuálním prostoru.
      */
+    // V třídě PrikazProzkoumej.java
     @Override
     public String provedPrikaz(String... parametry) {
         casovac.provedAkci();
@@ -34,15 +35,14 @@ public class PrikazProzkoumej implements IPrikaz {
             Prostor aktualniProstor = herniPlan.getAktualniProstor();
             aktualniProstor.setBylProzkoumany(true);
 
-            String veciVProstoru = String.join(", ", aktualniProstor.getVeci().keySet());
-
-            if (veciVProstoru.isEmpty()) {
+            if (aktualniProstor.getVeci().isEmpty()) {
                 return "V místnosti nejsou žádné věci.";
             } else {
-                return "V místnosti se nachází: " + veciVProstoru;
+                return "V místnosti se nachází: " + String.join(", ", aktualniProstor.getVeci().keySet());
             }
         }
-        return null;
+
+        return "Příkaz 'prozkoumej' se používá bez parametrů.";
     }
 
     /**

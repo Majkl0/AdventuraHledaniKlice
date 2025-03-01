@@ -3,6 +3,7 @@ package cz.vse.adventura.main;
 import cz.vse.adventura.logika.Hra;
 import cz.vse.adventura.logika.IHra;
 import cz.vse.adventura.logika.Prostor;
+import cz.vse.adventura.logika.Vec;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,8 +16,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import cz.vse.adventura.logika.Kapsa;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +28,7 @@ import java.util.Optional;
  */
 public class HomeController implements Pozorovatel {
 
-@FXML
+    @FXML
 private void napovedaKlik(ActionEvent actionEvent) {
     Stage napovedaStage = new Stage();
     WebView wv = new WebView();
@@ -51,10 +52,15 @@ private void napovedaKlik(ActionEvent actionEvent) {
     @FXML private Button tlacitkoOdesli;
     @FXML private TextArea vystup;
     @FXML private TextField vstup;
+    @FXML private ListView<Vec> veciVMistnosti;
+    @FXML private TitledPane veciVMistnostiPane;
+    @FXML private ListView<Vec> veciVKapse;
+    @FXML private TitledPane inicializujKapsa;
 
     private IHra hra;
     private final ObservableList<Prostor> seznamVychodu = FXCollections.observableArrayList();
     private final Map<String, Point2D> souradniceProstoru = new HashMap<>();
+
 
     /**
      * Implementace rozhraní Pozorovatel.
@@ -69,28 +75,74 @@ private void napovedaKlik(ActionEvent actionEvent) {
      * Inicializace kontroleru.
      * Volá se automaticky po načtení FXML.
      */
-    @FXML
-    private void initialize() {
-        hra = new Hra();
-        vystup.appendText(hra.vratUvitani() + "\n\n");
+@FXML
+private void initialize() {
+    // Inicializace hlavní herní logiky
+    hra = new Hra();
+    Vec.setHra((Hra) hra);
+    vystup.appendText(hra.vratUvitani() + "\n\n");
 
-        inicializujSouradniceProstoru();
+    // Nastavení viditelnosti TitledPane pro věci v místnosti
+    veciVMistnostiPane.setVisible(false);
 
-        Platform.runLater(() -> {
-            vstup.requestFocus();
-            panelVychodu.setItems(seznamVychodu);
+    // Inicializace souřadnic prostorů pro mapu
+    inicializujSouradniceProstoru();
 
-            hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, () -> {
-                aktualizujSeznamVychodu();
-                aktualizujPolohuHrace();
-            });
+    // Nastavení GUI komponent
+    Platform.runLater(() -> {
+        vstup.requestFocus();
+        panelVychodu.setItems(seznamVychodu);
 
-            hra.registruj(ZmenaHry.KONEC_HRY, () -> aktualizujKonecHry());
+        // Registrace observerů pro změny ve hře
+        hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, () -> {
             aktualizujSeznamVychodu();
             aktualizujPolohuHrace();
-            panelVychodu.getCellFactory();
+            aktualizujVeciVMistnosti();
         });
+
+        hra.registruj(ZmenaHry.KONEC_HRY, () -> aktualizujKonecHry());
+
+
+        // Počáteční aktualizace GUI
+        aktualizujSeznamVychodu();
+        aktualizujPolohuHrace();
+    });
+
+    // V metodě initialize()
+veciVKapse.setItems(FXCollections.observableArrayList());
+hra.registruj(ZmenaHry.ZMENA_INVENTARE, () -> {
+    aktualizujKapsa();
+});
+
+    veciVMistnosti.setItems(FXCollections.observableArrayList());
+    veciVMistnosti.setCellFactory(param -> new ListCell<Vec>() {
+    @Override
+    protected void updateItem(Vec vec, boolean empty) {
+        super.updateItem(vec, empty);
+        if (empty || vec == null) {
+            setText(null);
+        } else {
+            setText(vec.getNazev());
+        }
     }
+});
+
+    // V metodě initialize() v HomeController.java
+veciVKapse.setCellFactory(param -> new ListCell<Vec>() {
+    @Override
+    protected void updateItem(Vec vec, boolean empty) {
+        super.updateItem(vec, empty);
+        if (empty || vec == null) {
+            setText(null);
+        } else {
+            setText(vec.getNazev());
+        }
+    }
+});
+    // Nastavení viditelnosti inventáře
+    inicializujKapsa.setVisible(true);
+    veciVKapse.setItems(Vec.getSeznamVeci());
+}
 
     /**
      * Inicializuje mapu souřadnic jednotlivých prostorů.
@@ -110,17 +162,25 @@ private void napovedaKlik(ActionEvent actionEvent) {
         seznamVychodu.clear();
         seznamVychodu.addAll(hra.getHerniPlan().getAktualniProstor().getSeznamVychodu());
         panelVychodu.setDisable(false);
+
+        // Upravíme tuto část
+        Prostor aktualniProstor = hra.getHerniPlan().getAktualniProstor();
+        veciVMistnostiPane.setVisible(aktualniProstor.bylProzkoumany);
+        if (aktualniProstor.bylProzkoumany) {
+            aktualizujVeciVMistnosti();
+        } else {
+            veciVMistnosti.getItems().clear();
+        }
     }
 
-    /**
-     * Aktualizuje pozici hráče na mapě.
-     */
     private void aktualizujPolohuHrace() {
-        String prostor = hra.getHerniPlan().getAktualniProstor().getNazev();
-        Point2D pozice = souradniceProstoru.get(prostor);
-        if (pozice != null) {
-            hrac.setLayoutX(pozice.getX());
-            hrac.setLayoutY(pozice.getY());
+        if (hrac != null) {  // Přidaná null kontrola
+            String prostor = hra.getHerniPlan().getAktualniProstor().getNazev();
+            Point2D pozice = souradniceProstoru.get(prostor);
+            if (pozice != null) {
+                hrac.setLayoutX(pozice.getX());
+                hrac.setLayoutY(pozice.getY());
+            }
         }
     }
 
@@ -142,7 +202,34 @@ private void napovedaKlik(ActionEvent actionEvent) {
         String vysledek = hra.zpracujPrikaz(prikaz);
         vystup.appendText(vysledek + "\n\n");
     }
+    @FXML
+    private void prozkoumatMistnost(ActionEvent event) {
+        String prikaz = "Prozkoumej";
+        zpracujPrikaz(prikaz);
 
+        veciVMistnostiPane.setVisible(true);
+        aktualizujVeciVMistnosti();
+
+
+        // Aktualizace ListView s věcmi v místnosti
+        ObservableList<Vec> veciList = FXCollections.observableArrayList();
+        Map<String, Vec> veci = hra.getHerniPlan().getAktualniProstor().getVeci();
+        veciList.addAll(veci.values());
+        veciVMistnosti.setItems(veciList);
+
+        // Přidejte CellFactory pro vlastní zobrazení položek
+        veciVMistnosti.setCellFactory(param -> new ListCell<Vec>() {
+            @Override
+            protected void updateItem(Vec vec, boolean empty) {
+                super.updateItem(vec, empty);
+                if (empty || vec == null) {
+                    setText(null);
+                } else {
+                    setText(vec.getNazev());
+                }
+            }
+        });
+    }
     /**
      * Zobrazí dialog pro potvrzení ukončení hry.
      */
@@ -181,4 +268,38 @@ private void napovedaKlik(ActionEvent actionEvent) {
             vystup.appendText("Chyba při zpracování příkazu: " + e.getMessage() + "\n");
         }
     }
+    private void aktualizujVeciVMistnosti() {
+        ObservableList<Vec> veciList = FXCollections.observableArrayList();
+        if (hra.getHerniPlan().getAktualniProstor().bylProzkoumany) {
+            Map<String, Vec> veci = hra.getHerniPlan().getAktualniProstor().getVeci();
+            veciList.addAll(veci.values());
+        }
+        veciVMistnosti.setItems(veciList);
+    }
+
+    @FXML
+    private void vemVec(MouseEvent event) {
+        ListView<Vec> sourceList = (ListView<Vec>) event.getSource();
+        Vec vybranaVec = sourceList.getSelectionModel().getSelectedItem();
+
+        if (vybranaVec != null) {
+            String prikaz = "Vezmi " + vybranaVec.getNazev();
+            zpracujPrikaz(prikaz);
+            aktualizujVeciVMistnosti();
+            aktualizujKapsa();
+        }
+    }
+
+private void aktualizujKapsa() {
+    if (hra.getHerniPlan().getKapsa() != null) {
+        Platform.runLater(() -> {
+            veciVKapse.setItems(hra.getHerniPlan().getKapsa().getVeci());
+        });
+    }
 }
+
+
+
+}
+
+

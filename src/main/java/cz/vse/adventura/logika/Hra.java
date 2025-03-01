@@ -107,7 +107,6 @@ public class Hra implements IHra {
     String textKVypsani=" .... ";
     if (platnePrikazy.jePlatnyPrikaz(slovoPrikazu)) {
         IPrikaz prikaz = platnePrikazy.vratPrikaz(slovoPrikazu);
-        setKonecHry(true);
         textKVypsani = prikaz.provedPrikaz(parametry);
     }
     else {
@@ -156,5 +155,6 @@ public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve tř�
                 pozorovatel.aktualizuj();
             }
         }
+
 
     }

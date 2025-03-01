@@ -25,6 +25,7 @@ public class HerniPlan implements PredmetPozorovani {
      * Konstruktor třídy HerniPlan. Vytváří místnosti ve hře.
      */
     public HerniPlan() {
+        kapsa = new Kapsa(); // Přidejte tuto řádku
         vytvorMistnostiHry(); // Inicializace herního plánu
         for(ZmenaHry zmenaHry: ZmenaHry.values()) {
             seznamPozorovatelu.put(zmenaHry, new HashSet<>());
@@ -115,5 +116,16 @@ public class HerniPlan implements PredmetPozorovani {
             pozorovatel.aktualizuj();
         }
     }
+    private Kapsa kapsa;
+
+    public Kapsa getKapsa() {
+        return kapsa;
+    }
+
+    private boolean vyhra = false;
+
+public void setVyhra(boolean vyhra) {
+    this.vyhra = vyhra;
+}
 
 }
