@@ -9,9 +9,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
+
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +26,17 @@ import java.util.Optional;
  * Zajišťuje propojení logiky hry s uživatelským rozhraním.
  */
 public class HomeController implements Pozorovatel {
+
+@FXML
+private void napovedaKlik(ActionEvent actionEvent) {
+    Stage napovedaStage = new Stage();
+    WebView wv = new WebView();
+    Scene napovedaScena = new Scene(wv);
+    napovedaStage.setScene(napovedaScena);
+    napovedaStage.show();
+    wv.getEngine().load(getClass().getResource("/cz.vse.adventura/main/napoveda.html").toExternalForm());
+
+    }
 
     // Konstanty pro souřadnice prostorů
     private static final class ProstorSouradnice {
@@ -69,8 +85,10 @@ public class HomeController implements Pozorovatel {
                 aktualizujPolohuHrace();
             });
 
-            hra.registruj(ZmenaHry.KONEC_HRY, this::aktualizujKonecHry);
+            hra.registruj(ZmenaHry.KONEC_HRY, () -> aktualizujKonecHry());
             aktualizujSeznamVychodu();
+            aktualizujPolohuHrace();
+            panelVychodu.getCellFactory();
         });
     }
 

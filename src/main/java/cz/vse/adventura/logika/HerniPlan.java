@@ -28,7 +28,6 @@ public class HerniPlan implements PredmetPozorovani {
         vytvorMistnostiHry(); // Inicializace herního plánu
         for(ZmenaHry zmenaHry: ZmenaHry.values()) {
             seznamPozorovatelu.put(zmenaHry, new HashSet<>());
-            upozorniPozorovatele(ZmenaHry.ZMENA_MISTNOSTI);
         }
     }
 
