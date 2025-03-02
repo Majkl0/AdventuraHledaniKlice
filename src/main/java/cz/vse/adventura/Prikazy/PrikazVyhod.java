@@ -4,6 +4,13 @@ import cz.vse.adventura.logika.HerniPlan;
 import cz.vse.adventura.logika.IPrikaz;
 import cz.vse.adventura.logika.Kapsa;
 import cz.vse.adventura.logika.Vec;
+import cz.vse.adventura.main.ZmenaHry;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.Map;
+
+import static cz.vse.adventura.logika.Vec.hra;
 
 /**
  * Třída PrikazVyhod
@@ -42,11 +49,10 @@ public PrikazVyhod(Kapsa kapsa, HerniPlan herniPlan) {
         }
 
         Vec vyhozenyPredmet = kapsa.odeberPredmet(nazevPredmetu);
-            herniPlan.getAktualniProstor().vlozVec(vyhozenyPredmet);
-            return "Vyhodil jsi předmět '" + nazevPredmetu + "'.";
-
+        herniPlan.getAktualniProstor().vlozVec(vyhozenyPredmet);
+        hra.upozorniPozorovatele(ZmenaHry.ZMENA_MISTNOSTI); // Přidáno pro notifikaci
+        return "Vyhodil jsi předmět '" + nazevPredmetu + "'.";
     }
-
 
     /**
      * Vrátí název tohoto příkazu.
@@ -65,4 +71,6 @@ public PrikazVyhod(Kapsa kapsa, HerniPlan herniPlan) {
     public String getPopis() {
         return "Příkaz 'Vyhoď' [název předmětu] vyhodí předmět z inventáře(kapsy). Slouží pro uvolnění místa v inventáři, vyhozenou věc najdeš v místnosti, kde si ji nechal.";
     }
+
 }
+

@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static cz.vse.adventura.logika.Vec.hra;
+
 /**
  * Třída Hra
  * Třída vytváří seznam platných příkazů, nastavuje zbývající čas a vypisuje uvítací
@@ -150,11 +152,14 @@ public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve tř�
         seznamPozorovatelu.get(zmenaHry).add(pozorovatel);
 
         }
-        private void upozorniPozorovatele(ZmenaHry zmenaHry) {
+        public void upozorniPozorovatele(ZmenaHry zmenaHry) {
             for(Pozorovatel pozorovatel: seznamPozorovatelu.get(zmenaHry)) {
                 pozorovatel.aktualizuj();
             }
         }
 
 
+    public static Hra getHra() {
+        return hra;
+    }
     }

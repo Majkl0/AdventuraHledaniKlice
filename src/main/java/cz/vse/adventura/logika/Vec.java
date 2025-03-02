@@ -8,7 +8,7 @@ public class Vec {
     private String nazev;
     private boolean jePrenositelna;
     private String obrazek; // přidáno pro cestu k obrázku
-    static Hra hra;
+    public static Hra hra;
 
     /**
      * Konstruktor pro vytvoření instance třídy Vec.
@@ -53,5 +53,8 @@ public class Vec {
 
     public static ObservableList<Vec> getSeznamVeci() {
         return seznamVeci;
+    }
+    public static Hra getHra() {
+        return hra;
     }
 }

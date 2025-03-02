@@ -4,6 +4,8 @@ import cz.vse.adventura.logika.Hra;
 import cz.vse.adventura.logika.IHra;
 import cz.vse.adventura.logika.Prostor;
 import cz.vse.adventura.logika.Vec;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import cz.vse.adventura.logika.Kapsa;
+import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +60,8 @@ private void napovedaKlik(ActionEvent actionEvent) {
     @FXML private TitledPane veciVMistnostiPane;
     @FXML private ListView<Vec> veciVKapse;
     @FXML private TitledPane inicializujKapsa;
+    private Timeline updateTimeline;
+
 
     private IHra hra;
     private final ObservableList<Prostor> seznamVychodu = FXCollections.observableArrayList();
@@ -107,6 +112,8 @@ private void initialize() {
         // Počáteční aktualizace GUI
         aktualizujSeznamVychodu();
         aktualizujPolohuHrace();
+
+        veciVKapse.setOnMouseClicked(this::inventarKlik);
     });
 
     // V metodě initialize()
@@ -134,6 +141,7 @@ hra.registruj(ZmenaHry.ZMENA_INVENTARE, () -> {
             setGraphic(obrazek);
         }
     }
+
 });
 
     veciVKapse.setCellFactory(param -> new ListCell<Vec>() {
@@ -163,6 +171,14 @@ hra.registruj(ZmenaHry.ZMENA_INVENTARE, () -> {
     // Nastavení viditelnosti inventáře
     inicializujKapsa.setVisible(true);
     veciVKapse.setItems(Vec.getSeznamVeci());
+
+    updateTimeline = new Timeline(new KeyFrame(Duration.seconds(0.8), event -> {
+        aktualizujVeciVMistnosti();
+        aktualizujKapsa();
+    }));
+    updateTimeline.setCycleCount(Timeline.INDEFINITE);
+    updateTimeline.play();
+
 }
 
     /**
@@ -328,6 +344,26 @@ hra.registruj(ZmenaHry.ZMENA_INVENTARE, () -> {
                 veciVKapse.setItems(null);
                 veciVKapse.setItems(hra.getHerniPlan().getKapsa().getVeci());
             });
+        }
+    }
+    // In HomeController.java
+    @FXML
+    private void inventarKlik(MouseEvent event) {
+        Vec selectedItem = veciVKapse.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            Prostor currentRoom = hra.getHerniPlan().getAktualniProstor();
+
+            // Check for special cases with keys
+            if (selectedItem.getNazev().equals("Klíč od skříně") &&
+                    currentRoom.najdiVec("Zamčená skříň") != null) {
+                zpracujPrikaz("Použij Klíč od skříně Zamčená skříň");
+            } else if (selectedItem.getNazev().equals("Klíč od dveří") &&
+                    currentRoom.najdiVec("Zamčené dveře") != null) {
+                zpracujPrikaz("Použij Klíč od dveří Zamčené dveře");
+            } else {
+                // Default case - drop item
+                zpracujPrikaz("Vyhoď " + selectedItem.getNazev());
+            }
         }
     }
 }
