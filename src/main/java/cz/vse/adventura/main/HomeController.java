@@ -66,6 +66,7 @@ public class HomeController implements Pozorovatel {
             hra.registruj(ZmenaHry.KONEC_HRY, this::aktualizujKonecHry);
             hra.registruj(ZmenaHry.ZMENA_CASU, this::aktualizujCas);
             aktualizujProstredi();
+            hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, () -> aktualizujSeznamVychodu());
         });
 
         veciVKapse.setItems(FXCollections.observableArrayList());

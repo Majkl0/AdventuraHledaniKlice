@@ -83,7 +83,7 @@
                               <Image url="@mapa.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="56.0" layoutX="288.0" layoutY="262.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="hrac" fitHeight="76.0" fitWidth="56.0" layoutX="288.0" layoutY="262.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@hrac.png" />
                            </image>
