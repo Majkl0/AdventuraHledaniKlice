@@ -128,4 +128,10 @@ public void setVyhra(boolean vyhra) {
     this.vyhra = vyhra;
 }
 
+    private Casovac casovac;
+
+    public Casovac getCasovac() {
+        return casovac;
+    }
+
 }

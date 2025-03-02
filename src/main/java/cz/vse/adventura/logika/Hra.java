@@ -162,4 +162,5 @@ public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve tř�
     public static Hra getHra() {
         return hra;
     }
+
     }
