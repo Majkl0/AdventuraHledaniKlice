@@ -11,8 +11,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static cz.vse.adventura.logika.Vec.hra;
-
 /**
  * Třída Hra
  * Třída vytváří seznam platných příkazů, nastavuje zbývající čas a vypisuje uvítací
@@ -30,13 +28,12 @@ public class Hra implements IHra {
 
     private Map<ZmenaHry, Set<Pozorovatel>> seznamPozorovatelu = new HashMap<>();
 
-
     /**
      * Konstruktor třídy Hra.
      * Volá herní plán, časovač, inventář a seznam platných příkazů.
      * Zde si nastavujeme počet kroků hry
      * Do seznamu platných příkazů vkládá instance příkazů, které mohou být ve hře použity,
-     * což umožňuje hráči použávat příkazy.
+     * což umožňuje hráči používat příkazy.
      */
     public Hra() {
         herniPlan = new HerniPlan();
@@ -44,9 +41,8 @@ public class Hra implements IHra {
         kapsa = new Kapsa();
         platnePrikazy = new SeznamPrikazu();
 
-        // Vkladání příkazů
         platnePrikazy.vlozPrikaz(new PrikazNapoveda(platnePrikazy));
-        platnePrikazy.vlozPrikaz(new PrikazJdi(herniPlan,casovac));
+        platnePrikazy.vlozPrikaz(new PrikazJdi(herniPlan, casovac));
         platnePrikazy.vlozPrikaz(new PrikazVezmi(herniPlan, kapsa, casovac));
         platnePrikazy.vlozPrikaz(new PrikazVyhod(kapsa, herniPlan));
         platnePrikazy.vlozPrikaz(new PrikazPouzij(herniPlan, kapsa, casovac, this));
@@ -73,7 +69,6 @@ public class Hra implements IHra {
      * mu zbývalo.
      * @return Ukončovací text.
      */
-
     @Override
     public String vratEpilog() {
         if (casovac.doselCas()) {
@@ -88,7 +83,7 @@ public class Hra implements IHra {
      * Kontroluje, zda hra skončila.
      * @return true pokud hra skončila, jinak false.
      */
-
+    @Override
     public boolean konecHry() {
         return (casovac.doselCas() || konecHry);
     }
@@ -98,69 +93,59 @@ public class Hra implements IHra {
      * @param radek Vstup od hráče.
      * @return Výsledek zpracování příkazu.
      */
-
+    @Override
     public String zpracujPrikaz(String radek) {
-    String [] slova = radek.split("[ \t]+");
-    String slovoPrikazu = slova[0];
-    String []parametry = new String[slova.length-1];
-    for(int i=0 ;i<parametry.length;i++){
-        parametry[i]= slova[i+1];
+        String [] slova = radek.split("[ \\t]+");
+        String slovoPrikazu = slova[0];
+        String []parametry = new String[slova.length-1];
+        for(int i=0 ;i<parametry.length;i++){
+            parametry[i]= slova[i+1];
+        }
+        String textKVypsani=" .... ";
+        if (platnePrikazy.jePlatnyPrikaz(slovoPrikazu)) {
+            IPrikaz prikaz = platnePrikazy.vratPrikaz(slovoPrikazu);
+            textKVypsani = prikaz.provedPrikaz(parametry);
+            if (casovac.getZbyvajiciAkce() <= 0) {
+                setKonecHry(true);
+                textKVypsani += "\n" + vratEpilog();
+            }
+        }
+        else {
+            textKVypsani="Nevím co tím myslíš? Tento příkaz neznám. ";
+        }
+        return textKVypsani;
     }
-    String textKVypsani=" .... ";
-    if (platnePrikazy.jePlatnyPrikaz(slovoPrikazu)) {
-        IPrikaz prikaz = platnePrikazy.vratPrikaz(slovoPrikazu);
-        textKVypsani = prikaz.provedPrikaz(parametry);
-    }
-    else {
-        textKVypsani="Nevím co tím myslíš? Tento příkaz neznám. ";
-    }
-    return textKVypsani;
-}
 
     /**
      * @return Aktuální prostor, ve kterém se hráč nachází.
      */
-
     public Prostor vratAktualniProstor() {
         return herniPlan.getAktualniProstor();
     }
 
+    @Override
     public HerniPlan getHerniPlan() {
-        return herniPlan; // nesmí být null
+        return herniPlan;
     }
 
     /**
      * Nastaví stav hry na konečný.
-     * @param konecHry true pokud hra pokračuje, false pokud hra končí.
+     * @param konecHry true pokud hra končí, jinak false.
      */
-public void setKonecHry(boolean konecHry) {  //void - vytvořený objekt ve třídě
-    this.konecHry = konecHry;
-    upozorniPozorovatele(ZmenaHry.KONEC_HRY);
-}
-
-
-    public Prostor getAktualniProstor() {
-        return herniPlan.getAktualniProstor(); // Získání aktuálního prostoru z herního plánu
+    @Override
+    public void setKonecHry(boolean konecHry) {
+        this.konecHry = konecHry;
+        upozorniPozorovatele(ZmenaHry.KONEC_HRY);
     }
 
-    /**
-     * @param zmenaHry
-     * @param pozorovatel
-     */
     @Override
     public void registruj(ZmenaHry zmenaHry, Pozorovatel pozorovatel) {
         seznamPozorovatelu.get(zmenaHry).add(pozorovatel);
-
-        }
-        public void upozorniPozorovatele(ZmenaHry zmenaHry) {
-            for(Pozorovatel pozorovatel: seznamPozorovatelu.get(zmenaHry)) {
-                pozorovatel.aktualizuj();
-            }
-        }
-
-
-    public static Hra getHra() {
-        return hra;
     }
 
+    public void upozorniPozorovatele(ZmenaHry zmenaHry) {
+        for(Pozorovatel pozorovatel: seznamPozorovatelu.get(zmenaHry)) {
+            pozorovatel.aktualizuj();
+        }
     }
+}

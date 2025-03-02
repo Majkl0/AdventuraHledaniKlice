@@ -1,13 +1,9 @@
-
 package cz.vse.adventura.logika;
 
 import cz.vse.adventura.main.PredmetPozorovani;
 
 /**
  *  Rozhraní které musí implementovat hra, je na ně navázáno uživatelské rozhraní
- *
- *@author     Michael Kolling, Lubos Pavlicek, Jarmila Pavlickova
- *@version    pro školní rok 2016/2017, LS2024, 4IT110
  */
 public interface IHra extends PredmetPozorovani
 {
@@ -37,10 +33,17 @@ public interface IHra extends PredmetPozorovani
      *  Pak otestuje zda příkaz je klíčovým slovem  např. jdi.
      *  Pokud ano spustí samotné provádění příkazu.
      *
-     *@param  radek  text, který zadal uživatel jako příkaz do hry.
-     *@return          vrací se řetězec, který se má vypsat na obrazovku
+     * @param  radek  text, který zadal uživatel jako příkaz do hry.
+     * @return          vrací se řetězec, který se má vypsat na obrazovku
      */
     public String zpracujPrikaz(String radek);
 
     public HerniPlan getHerniPlan();
+
+    /**
+     * Nastaví stav hry na konečný.
+     *
+     * @param konecHry true pokud hra končí, jinak false
+     */
+    public void setKonecHry(boolean konecHry);
 }

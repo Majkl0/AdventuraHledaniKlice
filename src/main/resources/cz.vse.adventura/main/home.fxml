@@ -89,6 +89,7 @@
                            </image>
                         </ImageView>
                          <Button layoutX="389.0" layoutY="313.0" mnemonicParsing="false"
+                                 fx:id="tlacitkoProzkoumatMistnost"
                                  text="Prozkoumat místnost"
                                  onAction="#prozkoumatMistnost" />
                      </children>
