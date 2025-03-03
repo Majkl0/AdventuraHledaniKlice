@@ -50,7 +50,7 @@ public PrikazVyhod(Kapsa kapsa, HerniPlan herniPlan) {
 
         Vec vyhozenyPredmet = kapsa.odeberPredmet(nazevPredmetu);
         herniPlan.getAktualniProstor().vlozVec(vyhozenyPredmet);
-        hra.upozorniPozorovatele(ZmenaHry.ZMENA_MISTNOSTI); // Přidáno pro notifikaci
+        hra.upozorniPozorovatele(ZmenaHry.ZMENA_MISTNOSTI);
         return "Vyhodil jsi předmět '" + nazevPredmetu + "'.";
     }
 

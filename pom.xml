@@ -5,7 +5,7 @@
 
     <groupId>cz.vse</groupId>
     <artifactId>adventura</artifactId>
-    <version>1.5.1-patch</version>
+    <version>1.6.0-snapshot</version>
     <name>adventura</name>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

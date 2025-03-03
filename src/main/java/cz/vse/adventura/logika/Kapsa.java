@@ -15,10 +15,6 @@ public class Kapsa {
         seznamVeci = FXCollections.observableArrayList();
     }
 
-    public static ObservableList<Vec> getSeznamVeci() {
-        return FXCollections.observableArrayList(seznamVeci);
-    }
-
     public boolean pridejPredmet(Vec predmet) {
         if (seznamVeci.size() >= MAXIMALNI_POCET_VECI) {
             return false;
