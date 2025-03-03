@@ -263,8 +263,12 @@ public class HomeController implements Pozorovatel {
 
     @FXML
     private void novaHraKlik(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Skutečně si přejete začít novou hru?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+
         hra = new Hra();
-        Vec.setHra((Hra) hra);
+        Vec.setHra((Hra) hra); }
 
         vystup.clear();
         vystup.appendText(hra.vratUvitani() + "\n\n");
