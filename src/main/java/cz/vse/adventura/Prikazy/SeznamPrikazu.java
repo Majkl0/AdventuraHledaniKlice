@@ -13,8 +13,8 @@ import java.util.Map;
  *  Každý nový příkaz (instance implementující rozhraní Prikaz) se
  *  musí do seznamu přidat metodou vlozPrikaz.
  *
- *@author     Michael Kolling, Lubos Pavlicek, Jarmila Pavlickova, Michael Cerny(odděláno public String vratNazvyPrikazu)
- *@version    pro školní rok 2016/2017, LS2024, 4IT110
+ * Autoři: Michael Cerny
+ * Verze: LS2025, 4IT115
  */
 public class SeznamPrikazu {
     private Map<String, IPrikaz> mapaSPrikazy;

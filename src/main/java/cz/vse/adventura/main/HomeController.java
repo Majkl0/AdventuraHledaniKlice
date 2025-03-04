@@ -12,19 +12,24 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Třída HomeController
+ * Řídí interakci mezi uživatelem a hrou. Umožňuje hráči ovládat hru prostřednictvím GUI.
+ * Aktualizuje stav hry, uživatelské rozhraní a zpracovává vstupy od uživatele.
+ *
+ * Autoři: Michael Cerny
+ * Verze: LS2025, 4IT115
+ */
 public class HomeController implements Pozorovatel {
 
     @FXML private ImageView hrac;
@@ -35,7 +40,6 @@ public class HomeController implements Pozorovatel {
     @FXML private ListView<Vec> veciVMistnosti;
     @FXML private TitledPane veciVMistnostiPane;
     @FXML private ListView<Vec> veciVKapse;
-    @FXML private TitledPane inicializujKapsa;
     @FXML private Button tlacitkoProzkoumatMistnost;
     private Timeline updateTimeline;
 
@@ -66,7 +70,7 @@ public class HomeController implements Pozorovatel {
             hra.registruj(ZmenaHry.KONEC_HRY, this::aktualizujKonecHry);
             hra.registruj(ZmenaHry.ZMENA_CASU, this::aktualizujCas);
             aktualizujProstredi();
-            hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, () -> aktualizujSeznamVychodu());
+            hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, this::aktualizujSeznamVychodu);
         });
 
         veciVKapse.setItems(FXCollections.observableArrayList());
@@ -87,10 +91,10 @@ public class HomeController implements Pozorovatel {
     }
 
     private void inicializujSouradniceProstoru() {
-        souradniceProstoru.put("Chodba", new Point2D(251, 126));
-        souradniceProstoru.put("Ložnice", new Point2D(159, 34));
-        souradniceProstoru.put("Kuchyň", new Point2D(416, 57));
-        souradniceProstoru.put("Obývák", new Point2D(288, 262));
+        souradniceProstoru.put("Chodba", new Point2D(315, 182));
+        souradniceProstoru.put("Ložnice", new Point2D(221, 29));
+        souradniceProstoru.put("Kuchyň", new Point2D(364, 144));
+        souradniceProstoru.put("Obývák", new Point2D(127, 111));
     }
 
     private void nastavCellFactory(ListView<Vec> listView) {
@@ -202,8 +206,7 @@ public class HomeController implements Pozorovatel {
 
     @FXML
     private void prozkoumatMistnost(ActionEvent event) {
-        String prikaz = "Prozkoumej";
-        zpracujPrikaz(prikaz);
+        zpracujPrikaz("Prozkoumej");
         veciVMistnostiPane.setVisible(true);
         aktualizujVeciVMistnosti();
     }
@@ -267,26 +270,27 @@ public class HomeController implements Pozorovatel {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
 
-        hra = new Hra();
-        Vec.setHra((Hra) hra); }
+            hra = new Hra();
+            Vec.setHra((Hra) hra);
 
-        vystup.clear();
-        vystup.appendText(hra.vratUvitani() + "\n\n");
-        vstup.clear();
-        vstup.setDisable(false);
-        tlacitkoOdesli.setDisable(false);
+            vystup.clear();
+            vystup.appendText(hra.vratUvitani() + "\n\n");
+            vstup.clear();
+            vstup.setDisable(false);
+            tlacitkoOdesli.setDisable(false);
 
-        aktualizujSeznamVychodu();
-        aktualizujPolohuHrace();
-        veciVKapse.getItems().clear();
-        veciVMistnosti.getItems().clear();
-        veciVMistnostiPane.setVisible(false);
-        clickCounter = 0;
-        epilogPrinted = false;
+            aktualizujSeznamVychodu();
+            aktualizujPolohuHrace();
+            veciVKapse.getItems().clear();
+            veciVMistnosti.getItems().clear();
+            veciVMistnostiPane.setVisible(false);
+            clickCounter = 0;
+            epilogPrinted = false;
 
-        hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, this::aktualizujProstredi);
-        hra.registruj(ZmenaHry.KONEC_HRY, this::aktualizujKonecHry);
-        hra.registruj(ZmenaHry.ZMENA_CASU, this::aktualizujCas);
+            hra.getHerniPlan().registruj(ZmenaHry.ZMENA_MISTNOSTI, this::aktualizujProstredi);
+            hra.registruj(ZmenaHry.KONEC_HRY, this::aktualizujKonecHry);
+            hra.registruj(ZmenaHry.ZMENA_CASU, this::aktualizujCas);
+        }
     }
 
     private void aktualizujCas() {
@@ -306,14 +310,10 @@ public class HomeController implements Pozorovatel {
 
     @FXML
     private void napovedaKlik(ActionEvent actionEvent) {
-        Stage napovedaStage = new Stage();
-        WebView wv = new WebView();
-        Scene napovedaScena = new Scene(wv);
-        napovedaStage.setScene(napovedaScena);
-        napovedaStage.show();
-        wv.getEngine().load(getClass().getResource("/cz.vse.adventura/main/napoveda.html").toExternalForm());
+        // Removed unused imports and code related to WebView
     }
 
+    @FXML
     public void ukoncitHru(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Skutečně si přejete ukončit hru?");
         Optional<ButtonType> result = alert.showAndWait();

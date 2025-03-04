@@ -9,8 +9,8 @@ import cz.vse.adventura.logika.IPrikaz;
  * všech dostupných příkazů.
  * Po zadání "Nápověda" s názvem konkrétního příkazu jako parametrem získá hráč nápovědu k zadanému příkazu.
  *
- * @author Jarmila Pavlickova, Luboš Pavlíček, Michael Cerny
- * @version pro školní rok 2016/2017, LS2024, 4IT110
+ * Autoři: Michael Cerny
+ * Verze: LS2025, 4IT115
  */
 
 public class PrikazNapoveda implements IPrikaz {

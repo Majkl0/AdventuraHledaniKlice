@@ -20,7 +20,7 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.vse.adventura.main.HomeController">
   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="498.0" minWidth="0.0" prefWidth="236.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="0.0" prefWidth="150.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="800.0" minWidth="10.0" prefWidth="564.0" />
       <ColumnConstraints />
   </columnConstraints>
@@ -69,18 +69,18 @@
                    <ListView fx:id="panelVychodu" onMouseClicked="#klikPanelVychodu" prefHeight="330.0" prefWidth="214.0" />
                </content>
             </TitledPane>
-             <TextArea fx:id="vystup" editable="false" prefHeight="330.0" prefWidth="191.0" />
+             <TextArea fx:id="vystup" editable="false" prefHeight="330.0" prefWidth="191.0" wrapText="true" />
          </items>
       </SplitPane>
       <TitledPane prefHeight="400.0" prefWidth="805.0" text="Mapa" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <content>
-            <HBox alignment="TOP_CENTER">
+             <HBox alignment="TOP_CENTER" style="-fx-background-color: white;">
                <children>
                   <Pane prefHeight="352.0" prefWidth="558.0">
                      <children>
-                        <ImageView fitHeight="368.0" fitWidth="534.0" layoutX="64.0" layoutY="-9.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="368.0" fitWidth="534.0" layoutX="38.0" layoutY="-9.0" pickOnBounds="true" preserveRatio="true" >
                            <image>
-                              <Image url="@mapa.png" />
+                              <Image url="@mapa.jpg" />
                            </image>
                         </ImageView>
                         <ImageView fx:id="hrac" fitHeight="76.0" fitWidth="56.0" layoutX="288.0" layoutY="262.0" pickOnBounds="true" preserveRatio="true">
@@ -88,7 +88,7 @@
                               <Image url="@hrac.png" />
                            </image>
                         </ImageView>
-                         <Button layoutX="389.0" layoutY="313.0" mnemonicParsing="false"
+                         <Button layoutX="470.0" layoutY="313.0" mnemonicParsing="false"
                                  fx:id="tlacitkoProzkoumatMistnost"
                                  text="Prozkoumat místnost"
                                  onAction="#prozkoumatMistnost" />
@@ -98,13 +98,12 @@
             </HBox>
          </content>
       </TitledPane>
-       <TitledPane fx:id="inicializujKapsa" prefHeight="400.0" prefWidth="239.0" text="Inventář" GridPane.rowIndex="1">
+       <TitledPane fx:id="inicializujKapsa" prefHeight="400.0" prefWidth="50.0" text="Inventář" GridPane.rowIndex="1">
            <content>
                <ListView fx:id="veciVKapse" />
            </content>
        </TitledPane>
-       <!-- V home.fxml změňte: -->
-       <TitledPane prefHeight="334.0" prefWidth="239.0" text="Věci v místnosti" GridPane.rowIndex="2" fx:id="veciVMistnostiPane">
+       <TitledPane prefHeight="334.0" prefWidth="20.0" text="Věci v místnosti" GridPane.rowIndex="2" fx:id="veciVMistnostiPane">
            <content>
                <ListView fx:id="veciVMistnosti" onMouseClicked="#vemVec" />
            </content>

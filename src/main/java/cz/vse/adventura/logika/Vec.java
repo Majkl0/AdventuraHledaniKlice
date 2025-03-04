@@ -4,11 +4,19 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * Třída Vec
+ * Reprezentuje předměty ve hře, které mohou být přenášeny nebo zůstat na místě.
+ * Každý předmět má název, informaci o přenositelnosti a cestu k obrázku.
+ *
+ * Autoři: Michael Cerny
+ * Verze: LS2025, 4IT115
+ */
 public class Vec {
-    private String nazev;
-    private boolean jePrenositelna;
-    private String obrazek; // přidáno pro cestu k obrázku
-    public static Hra hra;
+    private String nazev; // Název předmětu
+    private boolean jePrenositelna; // Určuje, zda lze předmět přenášet
+    private String obrazek; // Cesta k obrázku předmětu
+    public static Hra hra; // Odkaz na instanci hry
 
     /**
      * Konstruktor pro vytvoření instance třídy Vec.
@@ -22,38 +30,43 @@ public class Vec {
     }
 
     /**
-     * Konstruktor pro vytvoření instance třídy Vec s vlastní cestou k obrázku
-     * @param nazevVeci Název předmětu
-     * @param jePrenositelna Určuje, zda lze předmět přenášet
-     * @param obrazek Cesta k obrázku předmětu
+     * Nastaví instanci hry.
+     * @param hra Instance hry
      */
-    public Vec(String nazevVeci, boolean jePrenositelna, String obrazek) {
-        this.nazev = nazevVeci;
-        this.jePrenositelna = jePrenositelna;
-        this.obrazek = obrazek;
-    }
-
     public static void setHra(Hra hra) {
         Vec.hra = hra;
     }
 
+    /**
+     * Vrací název předmětu.
+     * @return Název předmětu
+     */
     public String getNazev() {
         return nazev;
     }
 
+    /**
+     * Vrací, zda je předmět přenositelný.
+     * @return true, pokud je předmět přenositelný, jinak false
+     */
     public boolean jePrenositelna() {
         return jePrenositelna;
     }
 
-    public String getObrazek() {
-        return obrazek;
-    }
+    private static ObservableList<Vec> seznamVeci = FXCollections.observableArrayList(); // Seznam všech věcí
 
-    private static ObservableList<Vec> seznamVeci = FXCollections.observableArrayList();
-
+    /**
+     * Vrací seznam všech věcí.
+     * @return ObservableList všech věcí
+     */
     public static ObservableList<Vec> getSeznamVeci() {
         return seznamVeci;
     }
+
+    /**
+     * Vrací instanci hry.
+     * @return Instance hry
+     */
     public static Hra getHra() {
         return hra;
     }

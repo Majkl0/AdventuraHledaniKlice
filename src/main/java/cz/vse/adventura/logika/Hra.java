@@ -1,7 +1,6 @@
 package cz.vse.adventura.logika;
 
 import cz.vse.adventura.Prikazy.*;
-import cz.vse.adventura.Prikazy.SeznamPrikazu;
 import cz.vse.adventura.main.Pozorovatel;
 import cz.vse.adventura.main.PredmetPozorovani;
 import cz.vse.adventura.main.ZmenaHry;
@@ -16,38 +15,41 @@ import java.util.Set;
  * Třída vytváří seznam platných příkazů, nastavuje zbývající čas a vypisuje uvítací
  * a ukončovací text hry. Dále kontroluje, zda hra skončila - true/false.
  *
- * Autoři: Michael Kolling, Lubos Pavlicek, Jarmila Pavlickova, Michael Cerny
- * Verze: pro školní rok 2016/2017, LS2024, 4IT110
+ * Autoři: Michael Cerny
+ * Verze: LS2025, 4IT115
  */
 public class Hra implements IHra {
-    private SeznamPrikazu platnePrikazy;
-    private HerniPlan herniPlan;
-    private boolean konecHry = false;
-    private Casovac casovac;
-    private Kapsa kapsa;
+    private SeznamPrikazu platnePrikazy; // Seznam platných příkazů ve hře
+    private HerniPlan herniPlan; // Herní plán obsahující místnosti a předměty
+    private boolean konecHry = false; // Stav, zda hra skončila
+    private Casovac casovac; // Časovač hry
+    private Kapsa kapsa; // Inventář hráče
 
-    private Map<ZmenaHry, Set<Pozorovatel>> seznamPozorovatelu = new HashMap<>();
+    private Map<ZmenaHry, Set<Pozorovatel>> seznamPozorovatelu = new HashMap<>(); // Mapa změn hry a jejich pozorovatelů
 
     /**
      * Konstruktor třídy Hra.
      * Volá herní plán, časovač, inventář a seznam platných příkazů.
-     * Zde si nastavujeme počet kroků hry
+     * Zde si nastavujeme počet kroků hry.
      * Do seznamu platných příkazů vkládá instance příkazů, které mohou být ve hře použity,
      * což umožňuje hráči používat příkazy.
      */
     public Hra() {
         herniPlan = new HerniPlan();
-        casovac = new Casovac(30);
-        kapsa = new Kapsa();
-        platnePrikazy = new SeznamPrikazu();
+        casovac = new Casovac(30); // Inicializace časovače s 30 minutami
+        kapsa = new Kapsa(); // Inicializace inventáře hráče
+        platnePrikazy = new SeznamPrikazu(); // Inicializace seznamu platných příkazů
 
+        // Vložení příkazů do seznamu platných příkazů
         platnePrikazy.vlozPrikaz(new PrikazNapoveda(platnePrikazy));
         platnePrikazy.vlozPrikaz(new PrikazJdi(herniPlan, casovac));
         platnePrikazy.vlozPrikaz(new PrikazVezmi(herniPlan, kapsa, casovac));
         platnePrikazy.vlozPrikaz(new PrikazVyhod(kapsa, herniPlan));
         platnePrikazy.vlozPrikaz(new PrikazPouzij(herniPlan, kapsa, casovac, this));
         platnePrikazy.vlozPrikaz(new PrikazProzkoumej(herniPlan, casovac));
-        for(ZmenaHry zmenaHry: ZmenaHry.values()) {
+
+        // Inicializace seznamu pozorovatelů pro každou změnu hry
+        for (ZmenaHry zmenaHry : ZmenaHry.values()) {
             seznamPozorovatelu.put(zmenaHry, new HashSet<>());
         }
     }
@@ -95,13 +97,13 @@ public class Hra implements IHra {
      */
     @Override
     public String zpracujPrikaz(String radek) {
-        String [] slova = radek.split("[ \\t]+");
+        String[] slova = radek.split("[ \\t]+");
         String slovoPrikazu = slova[0];
-        String []parametry = new String[slova.length-1];
-        for(int i=0 ;i<parametry.length;i++){
-            parametry[i]= slova[i+1];
+        String[] parametry = new String[slova.length - 1];
+        for (int i = 0; i < parametry.length; i++) {
+            parametry[i] = slova[i + 1];
         }
-        String textKVypsani=" .... ";
+        String textKVypsani = " .... ";
         if (platnePrikazy.jePlatnyPrikaz(slovoPrikazu)) {
             IPrikaz prikaz = platnePrikazy.vratPrikaz(slovoPrikazu);
             textKVypsani = prikaz.provedPrikaz(parametry);
@@ -109,20 +111,16 @@ public class Hra implements IHra {
                 setKonecHry(true);
                 textKVypsani += "\n" + vratEpilog();
             }
-        }
-        else {
-            textKVypsani="Nevím co tím myslíš? Tento příkaz neznám. ";
+        } else {
+            textKVypsani = "Nevím co tím myslíš? Tento příkaz neznám.";
         }
         return textKVypsani;
     }
 
     /**
-     * @return Aktuální prostor, ve kterém se hráč nachází.
+     * Vrací herní plán.
+     * @return herní plán
      */
-    public Prostor vratAktualniProstor() {
-        return herniPlan.getAktualniProstor();
-    }
-
     @Override
     public HerniPlan getHerniPlan() {
         return herniPlan;
@@ -135,17 +133,26 @@ public class Hra implements IHra {
     @Override
     public void setKonecHry(boolean konecHry) {
         this.konecHry = konecHry;
-        upozorniPozorovatele(ZmenaHry.KONEC_HRY);
+        upozorniPozorovatele(ZmenaHry.KONEC_HRY); // Upozorní pozorovatele na konec hry
     }
 
+    /**
+     * Registruje pozorovatele pro danou změnu hry.
+     * @param zmenaHry typ změny hry
+     * @param pozorovatel pozorovatel, který bude registrován
+     */
     @Override
     public void registruj(ZmenaHry zmenaHry, Pozorovatel pozorovatel) {
-        seznamPozorovatelu.get(zmenaHry).add(pozorovatel);
+        seznamPozorovatelu.get(zmenaHry).add(pozorovatel); // Přidá pozorovatele do seznamu pro danou změnu hry
     }
 
+    /**
+     * Upozorní všechny pozorovatele na danou změnu hry.
+     * @param zmenaHry typ změny hry
+     */
     public void upozorniPozorovatele(ZmenaHry zmenaHry) {
-        for(Pozorovatel pozorovatel: seznamPozorovatelu.get(zmenaHry)) {
-            pozorovatel.aktualizuj();
+        for (Pozorovatel pozorovatel : seznamPozorovatelu.get(zmenaHry)) {
+            pozorovatel.aktualizuj(); // Aktualizuje všechny registrované pozorovatele
         }
     }
 }

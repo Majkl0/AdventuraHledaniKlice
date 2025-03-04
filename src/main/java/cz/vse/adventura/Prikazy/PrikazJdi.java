@@ -11,8 +11,8 @@ import cz.vse.adventura.logika.Prostor;
  * Příkaz vyžaduje jako parametr název místnosti, do kterého se hráč chce přesunout.
  * Validita cílového prostoru a jeho dostupnost z aktuálního prostoru je ověřována před provedením přesunu.
  *
- * Autoři: Michael Kolling, Lubos Pavlicek, Jarmila Pavlickova, Michael Cerny
- * Verze: pro školní rok 2016/2017, LS2024, 4IT110
+ * Autoři: Michael Cerny
+ * Verze: LS2025, 4IT115
  */
 public class PrikazJdi implements IPrikaz {
     public static final String NAZEV = "Jdi";
